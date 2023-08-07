@@ -1,4 +1,7 @@
 # WAAFLE versions
+## v1.0.0
+
+* Re-tag for release
 
 ## v0.1.0
 
