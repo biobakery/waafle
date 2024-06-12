@@ -1,18 +1,16 @@
 # WAAFLE
 
-**WAAFLE** (a **W**orkflow to **A**nnotate **A**ssemblies and **F**ind **L**GT Events) is a method for finding novel LGT (Lateral Gene Transfer) events in assembled metagenomes, including those from human microbiomes.Please direct questions to the [bioBakery Support Forum in WAAFLE category](https://forum.biobakery.org/c/Microbial-community-profiling/WAAFLE).
+**WAAFLE** (a **W**orkflow to **A**nnotate **A**ssemblies and **F**ind **L**GT Events) is a method for finding novel LGT (Lateral Gene Transfer) events in assembled metagenomes, including those from human microbiomes. Please direct questions to the [WAAFLE "topic" in the bioBakery Support Forum](https://forum.biobakery.org/c/Microbial-community-profiling/WAAFLE).
 
 
 ## Citation
 The WAAFLE manuscript has been submitted!
 
-Tiffany Y. Hsu*, Etienne Nzabarushimana*, Dennis Wong, Chengwei Luo, Robert G. Beiko, Morgan Langille, Curtis Huttenhower, Long H. Nguyen**, Eric A. Franzosa**.
+> Tiffany Y. Hsu*, Etienne Nzabarushimana*, Dennis Wong, Chengwei Luo, Robert G. Beiko, Morgan Langille, Curtis Huttenhower, Long H. Nguyen**, Eric A. Franzosa**. _Profiling novel lateral gene transfer events in the human microbiome_. (Submitted.)
+> 
+> \* = co-lead; \*\* = co-supervised
 
-<h4> Profiling novel lateral gene transfer events in the human microbiome. (Submitted.) </h4>
 
-```
-[* = co-lead; ** = co-supervised]
-```
 In the meantime, if you use WAAFLE in your work, please cite the WAAFLE repository on GitHub: https://github.com/biobakery/waafle.
 
 ## Installation
@@ -41,7 +39,7 @@ $ unzip master.zip
 * Python 3+ or 2.7+
 * Python `numpy` (tested with v1.13.3)
 * [NCBI BLAST+](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download) (tested with v2.6.0)
-* [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) (for performing read-level QC; tested with v2.2.3)
+* [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) (for performing contig-level QC; tested with v2.2.3)
 
 ## Database requirements
 
@@ -62,16 +60,16 @@ Contigs should be provided as nucleotide sequences in FASTA format. Contigs are 
 
 ### Input ORF calls (optional)
 
-2) The optional GFF file, if provided, should conform to the [GFF format]([https://useast.ensembl.org/info/website/upload/gff.html). The WAAFLE developers recommend [Prodigal](https://github.com/hyattpd/Prodigal) as a general-purpose ORF caller with GFF output.
+The optional GFF file, if provided, should conform to the [GFF format]([https://useast.ensembl.org/info/website/upload/gff.html). The WAAFLE developers recommend [Prodigal](https://github.com/hyattpd/Prodigal) as a general-purpose ORF caller with GFF output. WAAFLE can alternatively generate a GFF file as part of its normal operation ([as described below](#step-2-gene-calling-with-waafle_genecaller)).
 
 * [A sample GFF file produced by WAAFLE](https://github.com/biobakery/waafle/blob/master/demo/output/demo_contigs.gff)
 * [A sample GFF file produced by Prodigal](https://github.com/biobakery/waafle/blob/master/demo/output_prodigal/demo_contigs.prodigal.gff)
 
 ## Performing a WAAFLE analysis
 
-Analyzing a set of contigs with WAAFLE consistent of three steps, one of which is optional. These three steps are carried out by three independent scripts: `waafle_search`, `waafle_genecaller` (optional), and `waafle_orgscorer`.
+Analyzing a set of contigs with WAAFLE requires performing four steps: 1) subjecting the contigs to homology-based search, 2) identifying genes / open reading frames (ORFs) along the contigs, 3) combining the results of Steps 1 and 2 to identify candidate LGT events, and 4) performing contig-level quality control (QC) to weed out misassembled contigs. All of these steps can be performed using WAAFLE utilities. Steps 2 and 4 can optionally be performed outside of WAAFLE using other methods.
 
-### Step 1 (required): running `waafle_search`
+### Step 1: Homology-based search with  `waafle_search`
 
 `waafle_search` is a light wrapper around `blastn` to help guide the nucleotide-level search of your metagenomic contigs against a WAAFLE-formatted database (for example, it ensures that all of the non-default BLAST output fields required for downstream processing are generated).
 
@@ -83,17 +81,19 @@ $ waafle_search contigs.fna waafledb/waafled
 
 By default, this produces an output file `contigs.blastout` in the same location as the input contigs. See the `--help` menu for additional configuration options.
 
-### Step 1.5 (optional): Running `waafle_genecaller`
+### Step 2: Gene calling with `waafle_genecaller`
 
-If the user chooses not to provide a GFF file along with their contigs, WAAFLE can identify gene coordinates of interest directly from the BLAST output produced in the previous step:
+WAAFLE can identify gene coordinates of interest directly from the BLAST output produced in the previous step:
 
 `$ waafle_genecaller contigs.blastout`
 
 This produces a file in GFF format called  `contigs.gff` for use in the next and last WAAFLE step. See the `--help` menu for additional configuration options.
 
-### Step 2 (required): Running `waafle_orgscorer`
+[As described above](#input-orf-calls-optional), a user can alternatively provide a GFF file for their contigs that was generated outside of WAAFLE using another method, e.g. [Prodigal](https://github.com/hyattpd/Prodigal).
 
-The final and most critical step of a WAAFLE analysis is combining the BLAST output generated in Step 1 with a GFF file to 1) taxonomically score genes along the length of the input contigs and then 2) identify those contigs as derived from a single clade or a pair of clades (i.e. putative LGT). Assuming you have run steps 1 and 1.5 as described above, a sample call to `waafle_orgscorer` would be:
+### Step 3: Identify candidate LGT events with `waafle_orgscorer`
+
+The next and most critical step of a WAAFLE analysis is combining the BLAST output generated in Step 1 with a GFF file (generated in Step 2 or with an external method) to 1) taxonomically score genes along the length of the input contigs and then 2) identify those contigs as derived from a single clade or a pair of clades (i.e. putative LGT). Assuming you have run Steps 1 and 2 as described above, a sample call to `waafle_orgscorer` would be:
 
 ```
 $ waafle_orgscorer \
@@ -109,9 +109,15 @@ This will produce three output files which divide and describe your contigs as p
 * `contigs.no_lgt.tsv`
 * `contigs.unclassified.tsv`
 
-These files and their formats are described in more detailed below (see "Interpretting WAAFLE outputs").
+These files and their formats are described in more detailed below (see "WAAFLE outputs").
 
 `waafle_orgscorer` offers many options for fine-tuning your analysis. The various analysis parameters have been pre-optimized for maximum specificity on both short contigs (containing as little as two partial genes) and longer contigs (10s of genes). These options are detailed in the `--help` menu:
+
+### Step 4: Filter out misassembled contigs
+
+While WAAFLE's method of LGT detection has been optimized to distinguish LGT from other biological events (e.g. gene deletion), it does so assuming that the input contigs are biologically valid. This is notable as misassembled contigs, in particular chimeric assembly of genetic material from 2+ organisms, can spuriously manifest as LGT. It is therefore critical to filter out low-quality contigs before performing further downstream analyses on WAAFLE outputs.
+
+WAAFLE provides a set of utilities that can aid in the process of performing contig-level QC / filtering using the outputs of Steps 1-3. This method is [described below](#contig-level-quality-control). Alternatively, a user can perform contig-level QC (and remove/correct erroneous contigs) before starting their WAAFLE analysis using an external method, e.g. [metaMIC](https://github.com/ZhaoXM-Lab/metaMIC).
 
 ## WAAFLE outputs
 
@@ -157,7 +163,7 @@ The fields in detail:
 
 ## Contig-level quality control
 
-The WAAFLE workflow described above has been optimized to distinguish LGTs from other biological events (e.g. gene deletion). However, it cannot intrinsically identify spurious LGTs resulting from misassembly (e.g. chimerism). For this, we provide a separate method, the scripts `waafle_junctions` and `waafle_qc`.
+WAAFLE bundles two utilities, `waafle_junctions` and `waafle_qc`, that can be used to aid in the identification and removal of low-quality contigs.
 
 ### Quantifying junction support with `waafle_junctions`
 
@@ -270,4 +276,3 @@ The following properties of the taxonomy file are optional:
 
 ## Contributions ##
 This work was supported by the National Institutes of Health grants U54DE023798 (CH), R24DK110499 (CH), and K23DK125838 (LHN), the American Gastroenterological Association Research Foundation’s Research Scholars Award (LHN), and the Crohn’s and Colitis Foundation Career Development Award (LHN). The content is solely the responsibility of the authors and does not necessarily represent the official views of the NIH. We thank April Pawluk, Kelsey N. Thompson, Kristen Curry, and Todd Treangen for comments on the manuscript and helpful discussions. We also acknowledge Monia Michaud, Casey Dulong, and Yan Yan for their help with validation experiments. Computational work was conducted on the FASRC Cannon cluster supported by the FAS Division of Science Research Computing Group at Harvard University.
-
