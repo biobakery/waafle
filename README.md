@@ -119,6 +119,8 @@ While WAAFLE's method of LGT detection has been optimized to distinguish LGT fro
 
 WAAFLE provides a set of utilities that can aid in the process of performing contig-level QC / filtering using the outputs of Steps 1-3. This method is [described below](#contig-level-quality-control). Alternatively, a user can perform contig-level QC (and remove/correct erroneous contigs) before starting their WAAFLE analysis using an external method, e.g. [metaMIC](https://github.com/ZhaoXM-Lab/metaMIC).
 
+Notably, all contigs included in the demo files linked from this manual passed the QC checks imposed by the WAAFLE QC utilities referenced above.
+
 ## WAAFLE outputs
 
 The `contigs.lgt.tsv` output file lists the details of putative LGT contigs. Its fields are a superset of the types of fields included in the other output files. The following represents the first two lines/rows of a `contigs.lgt.tsv` file *transposed* such that first line (column headers) is shown as the first column and the details of the first LGT contig (second row) are shown as the second column:

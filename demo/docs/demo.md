@@ -1,4 +1,4 @@
-<h1>Welcome to the WAAFLE tutorial </h1>
+<h1>Welcome to the WAAFLE tutorial</h1>
 
 **WAAFLE** (a **W**orkflow to **A**nnotate **A**ssemblies and **F**ind **L**GT **E**vents) is a method for identifying novel lateral gene transfer (LGT) events in assembled metagenomic contigs. "Novel" in this context means that the LGT event has not been previously observed in a sequenced isolate genome of the putative recipient species.
 
@@ -11,22 +11,23 @@ You can install [WAAFLE from pypi](https://pypi.org/project/waafle/) or [from so
 - [How does WAAFLE work?](#how-does-waafle-work)
 - [Getting started with WAAFLE](#getting-started-with-waafle)
 - [Demo introduction](#demo-introduction)
-- [Step 1. Generate BLAST hits with waafle\_search.](#step-1-generate-blast-hits-with-waafle_search)
-- [Step 2. Call genes with waafle\_genecaller.](#step-2-call-genes-with-waafle_genecaller)
-- [Step 3. Find LGT-containing contigs with waafle\_orgscorer.](#step-3-find-lgt-containing-contigs-with-waafle_orgscorer)
-  - [Examining one-clade (no-LGT) contigs](#examining-one-clade-no-lgt-contigs)
-  - [Examining two-clade (putative LGT) contigs](#examining-two-clade-putative-lgt-contigs)
+- [Step 1. Generate BLAST hits with waafle_search.](#step-1-generate-blast-hits-with-waafle_search)
+- [Step 2. Call genes with waafle_genecaller.](#step-2-call-genes-with-waafle_genecaller)
+- [Step 3. Find LGT-containing contigs with waafle_orgscorer.](#step-3-find-lgt-containing-contigs-with-waafle_orgscorer)
+    - [Examining one-clade (no-LGT) contigs](#examining-one-clade-no-lgt-contigs)
+    - [Examining two-clade (putative LGT) contigs](#examining-two-clade-putative-lgt-contigs)
+- [Step 4. Contig-level quality control](#step-4-contig-level-quality-control)
 - [Extension A: Working with Prodigal gene calls](#extension-a-working-with-prodigal-gene-calls)
 - [Extension B: Experimenting with LGT-calling parameters](#extension-b-experimenting-with-lgt-calling-parameters)
-  - [Raising k1](#raising-k1)
-  - [Starting with genera](#starting-with-genera)
-  - [Requiring more isolate genome support](#requiring-more-isolate-genome-support)
+    - [Raising k<sub>1</sub>](#raising-ksub1sub)
+    - [Starting with genera](#starting-with-genera)
+    - [Requiring more isolate genome support](#requiring-more-isolate-genome-support)
 
 <!-- /TOC -->
 
 ## How does WAAFLE work?
 
-WAAFLE integrates gene sequence homology and taxonomic provenance to identify metagenomic contigs explained by pairs of microbial clades but not by single clades (i.e. putative LGTs). More specifically, for each locus in a contig, WAAFLE identifies the best hit to each species in a pangenome database. WAAFLE then looks for a species whose minimum per-locus score exceeds a lenient homology threshold (k<sub>1</sub>). If one or more species meet this criterion, then the contig is assigned to the species with the best average score. Otherwise, the process is repeated for pairs of species. If all per-locus scores for a pair of species exceed a stringent homology threshold (k<sub>2</sub>), then the contig is considered a putative LGT between those species.
+WAAFLE integrates gene sequence homology and taxonomic provenance to identify metagenomic contigs explained by pairs of microbial clades but not by single clades (i.e., putative LGTs). More specifically, for each locus in a contig, WAAFLE identifies the best hit to each species in a pangenome database. WAAFLE then looks for a species whose minimum per-locus score exceeds a lenient homology threshold (k<sub>1</sub>). If one or more species meet this criterion, then the contig is assigned to the species with the best average score. Otherwise, the process is repeated for pairs of species. If all per-locus scores for a pair of species exceed a stringent homology threshold (k<sub>2</sub>), then the contig is considered a putative LGT between those species.
 
 Consider the following pair of examples:
 
@@ -34,13 +35,13 @@ Consider the following pair of examples:
 
 Both cases consider contigs with six protein-coding loci (determined from WAAFLE itself or an independent ORF-calling program such as [Prodigal](https://github.com/hyattpd/Prodigal)). In Example 1, genes from species **C** are able to explain all of the loci reasonably well (with scores exceeding k<sub>1</sub>). Hence, WAAFLE will report this contig as a one-species contig explained by species **C**.
 
-In Example 2, no single species can explain all of the loci (the minimum score for each species is below k<sub>1</sub>). However, the pair of species **A** and **B** have strong hits (>k<sub>2</sub>) to all loci, and so WAAFLE concludes that this contig may represent an A+B LGT. Given the `AABBAA` synteny pattern, a B-to-A transfer would appear to be the more likely mechanism.
+In Example 2, no single species can explain all of the loci (the minimum score for each species is below k<sub>1</sub>). However, the pair of species **A** and **B** have strong hits (>k<sub>2</sub>) to all loci, and so WAAFLE concludes that this contig may represent an A+B LGT. Given the `AABBAA` gene order pattern, a B-to-A transfer would appear to be the more likely mechanism.
 
 Note that in Example 2, if species **C** had hits to the 2nd and 5th loci that exceeded k<sub>1</sub> (as in Example 1), WAAFLE's algorithm would conservatively favor the weaker one-species explanation for the contig rather than invoking a two-species (LGT-based) explanation.
 
 ## Getting started with WAAFLE
 
-You can test if WAAFLE is available in your computing environment by running `waafle_search -h`, which should return a help menu. If it doesn't, then please consult the [WAAFLE manual](https://bitbucket.org/biobakery/waafle/src/default/README.md) for help installing and setting up WAAFLE.
+You can test if WAAFLE is available in your computing environment by running `waafle_search -h`, which should return a help menu. If it doesn't, then please consult the [WAAFLE manual](https://github.com/biobakery/waafle) for help installing and setting up WAAFLE.
 
 If you cloned the WAAFLE repository, or are working in a bioBakery computing environment, you may already have the WAAFLE demo files available to you. If not, or if you're not sure, you can [download them from here](https://github.com/biobakery/waafle/archive/master.zip). The download will appear as a zip archive, `master.zip`. Extract the archive (with e.g. `unzip master.zip` on the command line) and then navigate to `waafle-master/demo` to find the demo files.
 
@@ -71,16 +72,16 @@ Inspect the demo files with `less` or other shell commands to answer the followi
 The first step in the WAAFLE workflow is to search the input contigs against a WAAFLE-formatted pangenome database. See the options for the `waafle_search` program using the help command:
 
 ```
-$ waafle_search --help
+waafle_search --help
 ```
 
 The two critical parameters are the query (contigs) and database. Let's search the demo contigs ([`demo_contigs.fna`](https://raw.githubusercontent.com/biobakery/waafle/master/demo/input/demo_contigs.fna)) against the demo database:
 
 ```
-$ waafle_search input/demo_contigs.fna input/demo_waafledb/demo_waafledb
+waafle_search input/demo_contigs.fna input/demo_waafledb/demo_waafledb
 ```
 
-The command will finish quickly as both the input and database are small. By default, this produces an output file [`demo_contigs.blastout`](https://raw.githubusercontent.com/biobakery/waafle/master/demo/output/demo_contigs.blastout). Let's inspect this output file with `$ less demo_contigs.blastout`:
+The command will finish quickly as both the input and database are small. By default, this produces an output file [`demo_contigs.blastout`](https://raw.githubusercontent.com/biobakery/waafle/master/demo/output/demo_contigs.blastout). Let's inspect this output file with `less demo_contigs.blastout`:
 
 ```
 1458  GENE000041992|s__Faecalibacterium_prausnitzii|UniProt=D4JZK5  5194  1347  1347  3675  5021  1347  1     92.72  1249  0   0.0     1947  minus
@@ -115,13 +116,13 @@ Answer the following questions about the BLAST output by using shell commands or
 In order to classify the contigs, WAAFLE compares the BLAST hits generated above to a set of predicted protein-coding loci within the contigs, as defined by a [GFF file](https://useast.ensembl.org/info/website/upload/gff.html). WAAFLE includes a utility to call genes within contigs based on the BLAST output itself by clustering the start and stop coordinates of hits along the length of the contig.
 
 ```
-$ waafle_genecaller --help
+waafle_genecaller --help
 ```
 
 This utility requires a single input to run: the BLAST output file:
 
 ```
-$ waafle_genecaller demo_contigs.blastout
+waafle_genecaller demo_contigs.blastout
 ```
 
 This produced a file in GFF format called [`demo_contigs.gff`](https://raw.githubusercontent.com/biobakery/waafle/master/demo/output/demo_contigs.gff). Inspect its contents using the `less` command:
@@ -150,7 +151,7 @@ Answer the following questions about the GFF output by using shell commands or v
 
 ## Step 3. Find LGT-containing contigs with waafle_orgscorer.
 
-The last step in the WAAFLE workflow is also the most important: comparing per-species BLAST hits with the contig's gene coordinates (loci) to try to find one- and two-species explanations for contigs (as described in the algorithm overview above). This step is peformed by the `waafle_orgscorer` utility. This utility has many tunable parameters, most of which are devoted to filtering and formatting the outputs. 
+The next step in the WAAFLE workflow is also the most important: comparing per-species BLAST hits with the contig's gene coordinates (loci) to try to find one- and two-species explanations for contigs (as described in the algorithm overview above). This step is peformed by the `waafle_orgscorer` utility. This utility has many tunable parameters, most of which are devoted to filtering and formatting the outputs. 
 
 You can inspect the parameters of `waafle_orgscorer` using the flag `-h` (for a summary) or `--help` (for details):
 
@@ -180,7 +181,7 @@ The two most important parameters are k<sub>1</sub> and k<sub>2</sub>, as introd
 Lets try a run of `waafle_orgscorer` with only the four required arguments, `contigs blastout gff taxonomy`:
 
 ```
-$ waafle_orgscorer \
+waafle_orgscorer \
 	input/demo_contigs.fna \
 	demo_contigs.blastout \
 	demo_contigs.gff \
@@ -198,7 +199,7 @@ This produces three output files:
 Most contigs are assigned to the `no_lgt` bin. Let's inspect a subset of the fields from this file with `cut` and `less`:
 
 ```
-$ cut -f1,4-7 demo_contigs.no_lgt.tsv | less
+cut -f1,4-7 demo_contigs.no_lgt.tsv | less
 ```
 
 Which yields:
@@ -216,7 +217,7 @@ CONTIG_NAME  MIN_SCORE  AVG_SCORE  SYNTENY    CLADE
 14528        0.901      0.917      AAAA       s__Collinsella_aerofaciens
 ```
 
-In the case of the first contig, 14237, these fields tell us that the contig was best explained by *Faecalibacterium prausnitzii*. The contig had four genes (evident from the `AAAA` synteny). *F. prausnitzii* had a minimum score over these genes of 0.983 (much greater than the threshold of 0.5), and its average score was similarly high at 0.989. We are very confident that this contig represents a fragment of *F. prausnitzii* genome.
+In the case of the first contig, 14237, these fields tell us that the contig was best explained by *Faecalibacterium prausnitzii*. The contig had four genes (evident from the `AAAA` gene order). *F. prausnitzii* had a minimum score over these genes of 0.983 (much greater than the threshold of 0.5), and its average score was similarly high at 0.989. We are very confident that this contig represents a fragment of *F. prausnitzii* genome.
 
 Answer the following questions about the one-species contigs by using shell commands, visual inspection, or internet research:
 
@@ -237,7 +238,7 @@ When WAAFLE fails to find a one- or two-species explanation, it repeats its sear
 Now for exciting part: examining the putative LGTs in the `demo_contigs.lgt.tsv` file. We'll again focus on a subset of the output columns:
 
 ```
-$ cut -f1,4-10 demo_contigs.lgt.tsv
+cut -f1,4-10 demo_contigs.lgt.tsv
 ```
 
 Which yields:
@@ -247,7 +248,7 @@ CONTIG_NAME  MIN_MAX_SCORE  AVG_MAX_SCORE  SYNTENY       DIRECTION  CLADE_A     
 12571        0.856          0.965          AABAAAA       B>A        s__Ruminococcus_bromii      s__Faecalibacterium_prausnitzii  f__Ruminococcaceae
 ```
 
-In the case of the first contig, 12571, these fields tell us that the contig was best explained by a putative LGT between *Ruminococcus bromii* and *Faecalibacterium prausnitzii*: two species that are related at the family level [according to the lowest common ancestor (LCA) field]. The synteny pattern `AABAAAA` suggests that a single *F. prausnitzii* gene (`B`) inserted into the *R. bromii* genome.
+In the case of the first contig, 12571, these fields tell us that the contig was best explained by a putative LGT between *Ruminococcus bromii* and *Faecalibacterium prausnitzii*: two species that are related at the family level [according to the lowest common ancestor (LCA) field]. The gene order pattern `AABAAAA` suggests that a single *F. prausnitzii* gene (`B`) inserted into the *R. bromii* genome.
 
 The min-max score entry indicates that, across the seven loci of this contig, one of these species always scored at least 0.856 (this exceeded the default k<sub>2</sub> value of 0.8, allowing the LGT to be called).
 
@@ -276,6 +277,12 @@ Challenge questions:
 - **How many LGT events occurred per 1,000 assembled genes?**
 ---
 
+## Step 4. Contig-level quality control
+
+When profiling LGT events from an assembled metagenome, it's critical to properly quality control (QC) the input contigs either before running WAAFLE or prior to performing downstream analysis of WAAFLE's outputs. This is due to the fact that errors in the assembly process, e.g. erroneous stiching of genomic material from 2+ genomes (chimerism), can spuriously manifest as LGT.
+
+Notably, all of the contigs used in this demo already passed rigorous QC thresholds, so we won't perform additional QC here. For more information about performing contig-level QC with WAAFLE utilities (or other methods) please consult the [WAAFLE manual](https://github.com/biobakery/waafle).
+
 ## Extension A: Working with Prodigal gene calls
 
 In the workflow above, we used `waafle_genecaller` to identify potential coding loci in our contigs. As alluded to above, we can also perform this step with an independent open reading frame (ORF) detection system, such as [Prodigal](https://github.com/hyattpd/Prodigal). 
@@ -283,17 +290,17 @@ In the workflow above, we used `waafle_genecaller` to identify potential coding 
 Run prodigal on the input contigs to produce an alternate GFF file:
 
 ```
-$ prodigal.linux \
-	-i input/demo_contigs.fna \
-	-f gff \
-	-o demo_contigs.prodigal.gff
+prodigal.linux \
+    -i input/demo_contigs.fna \
+    -f gff \
+    -o demo_contigs.prodigal.gff
 ```
 
 (If you don't have Prodigal available on your system, you can use the Prodigal GFF file in `output_prodigal/`.) Inspect the alternate GFF file [`demo_contigs.prodigal.gff`](https://raw.githubusercontent.com/biobakery/waafle/master/demo/output_prodigal/demo_contigs.prodigal.gff) with `less`. You'll find it has more details than the equivalent file produced by WAAFLE, but the overall format is the same.
 
 Repeat **Step 3** above using the alternate GFF file and adding the argument `--basename demo_contigs.prodigal` to the `waafle_orgscorer` call (this will prevent overwriting the original outputs). Inspect the outputs.
 
-You'll notice that the synteny strings now contain a `~` character. This corresponds to a locus that never received a "good" hit to any species (i.e. with homology score >k<sub>1</sub>). By default, `waafle_orgscorer` will ignore such loci. You can change this behavior with the `--weak-loci` flag.
+You'll notice that the gene order strings now contain a `~` character. This corresponds to a locus that never received a "good" hit to any species (i.e. with homology score >k<sub>1</sub>). By default, `waafle_orgscorer` will ignore such loci. You can change this behavior with the `--weak-loci` flag.
 
 ---
 - **How do the results change using the Prodigal GFF file?**
