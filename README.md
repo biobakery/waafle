@@ -178,7 +178,7 @@ WAAFLE bundles two utilities, `waafle_junctions` and `waafle_qc`, that can be us
 A sample call to `waafle_junctions` looks like:
 
 ```
-$ waafle_qc \
+$ waafle_junctions \
   contigs.fna \
   contigs.gff \
   --reads1 contigs_reads.1.fq \
