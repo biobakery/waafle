@@ -44,22 +44,29 @@ import numpy as np
 # ---------------------------------------------------------------
 # ---------------------------------------------------------------
 
-def run_process ( command ):
+def run_process ( command, success_message="\nFinished successfully."):
     # Run a command line process and report final status on stdout
+    issues=0
     say( "Executing command:", command )
     try:
         stdout=subprocess.check_output( command, shell=True, stderr=subprocess.STDOUT).decode("utf-8")
         say(stdout)
         if "warning" in stdout.lower():
             say("\nFinished with warnings.")
+            issues+=1
         # Allow for the case where the program does not indicate a return code error
         # and instead just reports the error in stdout/stderr
         elif "error" in stdout.lower():
             say("\nFinished with errors.")
+            issues+=1
         else:
-            say( "\nFinished successfully." )
+            say( success_message )
     except (subprocess.CalledProcessError, EnvironmentError):
         say("\nFinished with errors.")
+        issues+=1
+
+    return issues
+
 
 def say( *args ):
     print( " ".join( map( str, args ) ), file=sys.stderr )

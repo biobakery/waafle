@@ -211,9 +211,8 @@ def bowtie2_build( p_bowtie2_build=None, p_contigs=None, p_index=None,
             ]
         command = " ".join( command )
         command = command.format( **alias )
-        os.system( command )
-        wu.say( "Build complete." )
-    return None
+        issues = wu.run_process( command , success_message="Build complete.")
+    return issues
 
 def bowtie2_align( p_bowtie2=None, p_reads1=None, p_reads2=None, 
                    p_index=None, p_sam=None, args=None, ):
@@ -241,9 +240,8 @@ def bowtie2_align( p_bowtie2=None, p_reads1=None, p_reads2=None,
             ]
         command = " ".join( command )
         command = command.format( **alias )
-        os.system( command )
-        wu.say( "Alignment complete." )
-    return None
+        issues = wu.run_process( command , success_message="Alignment complete.")
+    return issues
 
 # ---------------------------------------------------------------
 # utils for parsing SAM/GFF comparison
@@ -389,19 +387,22 @@ def main( ):
     p_junctions = wu.name2path( basename, p_outdir, ".junctions.tsv" )
 
     # alignment workflow
+    issues=0
     if args.sam is not None:
         p_sam = args.sam
         wu.say( "Using specified SAM file:", p_sam )
     elif args.reads1 is not None and args.reads2 is not None:
         # build process
-        bowtie2_build( 
+        wu.say("Running bowtie2 build.")
+        issues+=bowtie2_build( 
             p_bowtie2_build=args.bowtie2_build,
             p_contigs=args.contigs,
             p_index=p_index,
             args=args,
             )
         # alignment process
-        bowtie2_align(
+        wu.say("Running bowtie2 align.")
+        issues+=bowtie2_align(
             p_bowtie2=args.bowtie2,
             p_reads1=args.reads1, 
             p_reads2=args.reads2,
@@ -480,7 +481,10 @@ def main( ):
                     file=fh, )
 
     # end
-    wu.say( "Finished successfully." )
+    if issues == 0:
+        wu.say( "Finished successfully." )
+    else:
+        wu.say( "Finished with errors." )
 
 if __name__ == "__main__":
     main( )
