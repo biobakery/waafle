@@ -110,9 +110,7 @@ def main( ):
         "-outfmt \'{FORMAT}\'",
         ]
     command = " ".join( command ).format( **params )
-    wu.say( "Executing command:", command )
-    os.system( command )
-    wu.say( "Finished successfully." )
+    wu.run_process(command)
 
 if __name__ == "__main__":
     main( )

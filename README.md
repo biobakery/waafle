@@ -56,7 +56,7 @@ An individual WAAFLE run requires one or two non-fixed inputs: 1) a file contain
 
 Contigs should be provided as nucleotide sequences in FASTA format. Contigs are expected to have unique, BLAST-compatible headers. WAAFLE is optimized for working with fragmentary contigs from partially assembled metagenomes (spanning 2-20 genes, or roughly 1-20 kb). WAAFLE is not optimized to work with extremely long contigs (100s of kbs), scaffolds, or closed genomes. The WAAFLE developers recommend [MEGAHIT](https://github.com/voutcn/megahit) as a general-purpose metagenomic assembler.
 
-* [A sample contigs input file](https://github.com/biobakery/waafle/blob/master/demo/input/demo_contigs.fna)
+* [A sample contigs input file](https://raw.githubusercontent.com/biobakery/waafle/refs/heads/main/demo/input/demo_contigs.fna)
 
 ### Input ORF calls (optional)
 
@@ -178,7 +178,7 @@ WAAFLE bundles two utilities, `waafle_junctions` and `waafle_qc`, that can be us
 A sample call to `waafle_junctions` looks like:
 
 ```
-$ waafle_qc \
+$ waafle_junctions \
   contigs.fna \
   contigs.gff \
   --reads1 contigs_reads.1.fq \
