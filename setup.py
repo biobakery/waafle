@@ -5,7 +5,7 @@ with open( "README.md" ) as fh:
 
 setuptools.setup(
     name = "waafle",
-    version = "1.0.0",
+    version = "1.1.0",
     author = "Eric Franzosa",
     author_email = "franzosa@hsph.harvard.edu",
     license = "MIT",
