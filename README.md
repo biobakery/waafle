@@ -69,6 +69,8 @@ The optional GFF file, if provided, should conform to the [GFF format]([https://
 
 Analyzing a set of contigs with WAAFLE requires performing four steps: 1) subjecting the contigs to homology-based search, 2) identifying genes / open reading frames (ORFs) along the contigs, 3) combining the results of Steps 1 and 2 to identify candidate LGT events, and 4) performing contig-level quality control (QC) to weed out misassembled contigs. All of these steps can be performed using WAAFLE utilities. Steps 2 and 4 can optionally be performed outside of WAAFLE using other methods.
 
+The rate-limiting step in the WAAFLE workflow (by far) is the upstream `blastn` search of the user's contigs against the ChocoPhlAn 2 database, which varies closely with the total input size (as measured by number of contigs or total assembly size). Using a typical laptop-sized computing instance, we observed a rate of ~1 CPU minute per megabase of input sequence for the upstream search and ~1 CPU second per megabase of input for both the internal gene-calling and LGT-scoring steps.
+
 ### Step 1: Homology-based search with  `waafle_search`
 
 `waafle_search` is a light wrapper around `blastn` to help guide the nucleotide-level search of your metagenomic contigs against a WAAFLE-formatted database (for example, it ensures that all of the non-default BLAST output fields required for downstream processing are generated).
