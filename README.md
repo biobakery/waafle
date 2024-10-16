@@ -4,6 +4,7 @@
 
 
 ## Citation
+
 The WAAFLE manuscript has been submitted!
 
 > Tiffany Y. Hsu*, Etienne Nzabarushimana*, Dennis Wong, Chengwei Luo, Robert G. Beiko, Morgan Langille, Curtis Huttenhower, Long H. Nguyen**, Eric A. Franzosa**. _Profiling novel lateral gene transfer events in the human microbiome_. (Submitted.)
@@ -13,27 +14,6 @@ The WAAFLE manuscript has been submitted!
 
 In the meantime, if you use WAAFLE in your work, please cite the WAAFLE repository on GitHub: https://github.com/biobakery/waafle.
 
-## Installation
-
-Install the WAAFLE software and Python dependencies with `pip`:
-
-```
-$ pip install waafle
-```
-
-You can also clone the WAAFLE package from Github:
-
-```
-$ git clone https://github.com/biobakery/waafle.git
-```
-
-Or download and inflate WAAFLE package directly:
-
-```
-$ wget https://github.com/biobakery/waafle/archive/master.zip
-$ unzip master.zip
-```
-
 ## Software requirements
 
 * Python 3+ or 2.7+
@@ -41,12 +21,61 @@ $ unzip master.zip
 * [NCBI BLAST+](https://blast.ncbi.nlm.nih.gov/Blast.cgi?CMD=Web&PAGE_TYPE=BlastDocs&DOC_TYPE=Download) (tested with v2.6.0)
 * [bowtie2](http://bowtie-bio.sourceforge.net/bowtie2/index.shtml) (for performing contig-level QC; tested with v2.2.3)
 
+## Installation
+
+### From Anaconda
+
+WAAFLE is available as a `conda` recipe from our `conda` channel, `biobakery`. Installing WAAFLE in this way will automatically satisfy the requirements listed above.
+
+If you haven't already, set channel priorities as follows:
+
+```
+$ conda config --add channels defaults
+$ conda config --add channels bioconda
+$ conda config --add channels conda-forge
+$ conda config --add channels biobakery
+```
+
+Then install WAAFLE with:
+
+```
+$ conda install waafle -c biobakery
+```
+
+### From PyPI
+
+Install the WAAFLE software and Python dependencies with `pip`:
+
+```
+$ pip install waafle
+```
+
+This will _not_ satisfy the non-Python dependencies listed above (e.g. BLAST).
+
+### From Source
+
+You can also clone the WAAFLE package from GitHub:
+
+```
+$ git clone https://github.com/biobakery/waafle.git
+```
+
 ## Database requirements
 
-WAAFLE requires two input databases: 1) a BLAST-formatted **nucleotide sequence database** and 2) a corresponding **taxonomy file**. The versions used in the WAAFLE publication are available for download here:
+WAAFLE requires two input databases: 1) a BLAST-formatted **nucleotide sequence database** and 2) a corresponding **taxonomy file**. The versions used in the WAAFLE publication, which are based on the ChocoPhlAn 2.0 pangenome catalog, are available for download here:
 
-* [waafledb.tar.gz](http://huttenhower.sph.harvard.edu/waafle_data/waafledb.tar.gz) (4.3 GB)
-* [waafledb_taxonomy.tsv](http://huttenhower.sph.harvard.edu/waafle_data/waafledb_taxonomy.tsv) (<1 MB)
+* [chocophlan2.tar.gz](http://huttenhower.sph.harvard.edu/waafle_data/chocophlan2.tar.gz) (4.3 GB)
+* [chocophlan_taxonomy.tsv](http://huttenhower.sph.harvard.edu/waafle_data/chocophlan2_taxonomy.tsv) (<1 MB)
+
+The BLAST database must be unpacked before it can be used. You can do this from the command line with:
+
+ ```
+ $ tar xzfv chocophlan2.tar.gz
+ ```
+ 
+ Which will create a folder of BLAST database files that can be referenced as `chocophlan2/chocophlan2`.
+
+See [Advanced Topics](#advanced-topics) at the bottom of this document for guidance on creating your own WAAFLE-compatible databases.
 
 ## Input data
 
@@ -75,10 +104,10 @@ The rate-limiting step in the WAAFLE workflow (by far) is the upstream `blastn` 
 
 `waafle_search` is a light wrapper around `blastn` to help guide the nucleotide-level search of your metagenomic contigs against a WAAFLE-formatted database (for example, it ensures that all of the non-default BLAST output fields required for downstream processing are generated).
 
-A sample call to `waafle_search` with input contigs `contigs.fna` and a blast database located in `waafledb` would be:
+A sample call to `waafle_search` with input contigs `contigs.fna` and a blast database located in `chocophlan2` would be:
 
 ```
-$ waafle_search contigs.fna waafledb/waafled
+$ waafle_search contigs.fna chocophlan2/chocophlan2
 ```
 
 By default, this produces an output file `contigs.blastout` in the same location as the input contigs. See the `--help` menu for additional configuration options.
@@ -102,7 +131,7 @@ $ waafle_orgscorer \
   contigs.fna \
   contigs.blastout \
   contigs.gff \
-  taxonomy.tsv
+  chocophlan2_taxonomy.tsv
 ```
 
 This will produce three output files which divide and describe your contigs as putative LGT contigs, single-clade (no-LGT) contigs, and unclassified contigs (e.g. those containing no genes):
