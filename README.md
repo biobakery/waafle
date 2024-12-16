@@ -2,12 +2,13 @@
 
 **WAAFLE** (a **W**orkflow to **A**nnotate **A**ssemblies and **F**ind **L**GT Events) is a method for finding novel LGT (Lateral Gene Transfer) events in assembled metagenomes, including those from human microbiomes. Please direct questions to the [WAAFLE "topic" in the bioBakery Support Forum](https://forum.biobakery.org/c/Microbial-community-profiling/WAAFLE).
 
+Large data sets described in the WAAFLE publication, including synthetic datasets and WAAFLE profiles of HMP1-II and HMP2 metagenomes, are [available for download here](https://huttenhower.sph.harvard.edu/waafle). Additional derived data will be made available as supporting information alongside the WAAFLE publication itself (see citation below, and check back for a final version).
 
 ## Citation
 
-The WAAFLE manuscript has been submitted!
+The WAAFLE manuscript has been accepted!
 
-> Tiffany Y. Hsu*, Etienne Nzabarushimana*, Dennis Wong, Chengwei Luo, Robert G. Beiko, Morgan Langille, Curtis Huttenhower, Long H. Nguyen**, Eric A. Franzosa**. _Profiling novel lateral gene transfer events in the human microbiome_. (Submitted.)
+> Tiffany Y. Hsu*, Etienne Nzabarushimana*, Dennis Wong, Chengwei Luo, Robert G. Beiko, Morgan Langille, Curtis Huttenhower, Long H. Nguyen**, Eric A. Franzosa**. _Profiling lateral gene transfer events in the human microbiome using WAAFLE_. Nature Microbiology. (In press.)
 > 
 > \* = co-lead; \*\* = co-supervised
 
