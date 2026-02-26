@@ -151,7 +151,7 @@ WAAFLE provides a set of utilities that can aid in the process of performing con
 
 Notably, all contigs included in the demo files linked from this manual passed the QC checks imposed by the WAAFLE QC utilities referenced above.
 
-## WAAFLE outputs [Example using WAAFLE v1.0 demo]
+## WAAFLE outputs 
 
 The `contigs.lgt.tsv` output file lists the details of putative LGT contigs. Its fields are a superset of the types of fields included in the other output files. The following represents the first two lines/rows of a `contigs.lgt.tsv` file *transposed* such that first line (column headers) is shown as the first column and the details of the first LGT contig (second row) are shown as the second column:
 
@@ -299,12 +299,12 @@ While the format of this file is relatively simple, it has a number of critical 
 * The file must contain a root taxon from which all other taxa descend (the root taxon should be named `r__Root`, as above).
 
 * All taxon names/IDs used in the sequence database must be the same distance from the root.
+* We recommend prefixing taxonomic clades to indicate their level. For example, `g__Homo` identifies *Homo* as a genus above.
+* WAAFLE 1.5 Taxonomy file structure uses taxonomic species + SGB as its most specific taxonomic label.
 
-The following properties of the taxonomy file are optional:
+The following properties of the taxonomy file are optional for WAAFLE v1.0:
 
 * Additional taxa *below* the level of the taxa in the sequence file can be included in the taxonomy file. For example, a species-level sequence database could contain isolate genomes as children of the species-level clades in the taxonomy file. (WAAFLE can use such entries as "leaf support" for LGT events.)
-
-* We recommend prefixing taxonomic clades to indicate their level. For example, `g__Homo` identifies *Homo* as a genus above.
 
 ## Contributions ##
 This work was supported by the National Institutes of Health grants U54DE023798 (CH), R24DK110499 (CH), and K23DK125838 (LHN), the American Gastroenterological Association Research Foundation’s Research Scholars Award (LHN), and the Crohn’s and Colitis Foundation Career Development Award (LHN). The content is solely the responsibility of the authors and does not necessarily represent the official views of the NIH. We thank April Pawluk, Kelsey N. Thompson, Kristen Curry, and Todd Treangen for comments on the manuscript and helpful discussions. We also acknowledge Monia Michaud, Casey Dulong, and Yan Yan for their help with validation experiments. Computational work was conducted on the FASRC Cannon cluster supported by the FAS Division of Science Research Computing Group at Harvard University.
