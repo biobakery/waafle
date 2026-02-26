@@ -6,8 +6,6 @@ _Large data sets described in the WAAFLE publication, including synthetic datase
 
 ## Citation
 
-The WAAFLE manuscript has been accepted!
-
 > Tiffany Y. Hsu*, Etienne Nzabarushimana*, Dennis Wong, Chengwei Luo, Robert G. Beiko, Morgan Langille, Curtis Huttenhower, Long H. Nguyen**, Eric A. Franzosa**. _Profiling lateral gene transfer events in the human microbiome using WAAFLE_. Nature Microbiology. (In press.)
 > 
 > \* = co-lead; \*\* = co-supervised
