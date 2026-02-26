@@ -63,16 +63,16 @@ $ git clone https://github.com/biobakery/waafle.git
 
 WAAFLE requires two input databases: 1) a BLAST-formatted **nucleotide sequence database** and 2) a corresponding **taxonomy file**. The versions used in the WAAFLE publication, which are based on the ChocoPhlAn 2.0 pangenome catalog, are available for download here:
 
-* [chocophlan2.tar.gz](http://huttenhower.sph.harvard.edu/waafle_data/chocophlan2.tar.gz) (4.3 GB)
-* [chocophlan_taxonomy.tsv](http://huttenhower.sph.harvard.edu/waafle_data/chocophlan2_taxonomy.tsv) (<1 MB)
+* [chocophlan.v202210_202403.tar.gz](https://huttenhower.sph.harvard.edu/waafle_data/chocophlan.v202210_202403.waafledb.tar.gz) (67GB)
+* [chocophlan.v202210_2022403.taxonomy.tsv](https://huttenhower.sph.harvard.edu/waafle_data/chocophlan.v202210_202403.taxonomy.tsv) (<4 MB)
 
 The BLAST database must be unpacked before it can be used. You can do this from the command line with:
 
  ```
- $ tar xzfv chocophlan2.tar.gz
+ $ tar xzfv chocophlan.v202210_202403.tar.gz
  ```
  
- Which will create a folder of BLAST database files that can be referenced as `chocophlan2/chocophlan2`.
+ Which will create a folder of BLAST database files that can be referenced as `chocophlan.v202210_202403.waafledb/chocophlan.v202210_202403.waafledb`.
 
 See [Advanced Topics](#advanced-topics) at the bottom of this document for guidance on creating your own WAAFLE-compatible databases.
 
@@ -103,10 +103,10 @@ The rate-limiting step in the WAAFLE workflow (by far) is the upstream `blastn` 
 
 `waafle_search` is a light wrapper around `blastn` to help guide the nucleotide-level search of your metagenomic contigs against a WAAFLE-formatted database (for example, it ensures that all of the non-default BLAST output fields required for downstream processing are generated).
 
-A sample call to `waafle_search` with input contigs `contigs.fna` and a blast database located in `chocophlan2` would be:
+A sample call to `waafle_search` with input contigs `contigs.fna` and a blast database located in `chocophlan.v202210_202403.waafledb` would be:
 
 ```
-$ waafle_search contigs.fna chocophlan2/chocophlan2
+$ waafle_search contigs.fna chocophlan.v202210_202403.waafledb/chocophlan.v202210_202403.waafledb
 ```
 
 By default, this produces an output file `contigs.blastout` in the same location as the input contigs. See the `--help` menu for additional configuration options.
@@ -130,7 +130,7 @@ $ waafle_orgscorer \
   contigs.fna \
   contigs.blastout \
   contigs.gff \
-  chocophlan2_taxonomy.tsv
+  chocophlan.v202210_202403.taxonomy.tsv
 ```
 
 This will produce three output files which divide and describe your contigs as putative LGT contigs, single-clade (no-LGT) contigs, and unclassified contigs (e.g. those containing no genes):
@@ -151,7 +151,7 @@ WAAFLE provides a set of utilities that can aid in the process of performing con
 
 Notably, all contigs included in the demo files linked from this manual passed the QC checks imposed by the WAAFLE QC utilities referenced above.
 
-## WAAFLE outputs
+## WAAFLE outputs [Example using WAAFLE v1.0 demo]
 
 The `contigs.lgt.tsv` output file lists the details of putative LGT contigs. Its fields are a superset of the types of fields included in the other output files. The following represents the first two lines/rows of a `contigs.lgt.tsv` file *transposed* such that first line (column headers) is shown as the first column and the details of the first LGT contig (second row) are shown as the second column:
 
