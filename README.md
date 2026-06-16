@@ -64,7 +64,7 @@ $ git clone https://github.com/biobakery/waafle.git
 WAAFLE requires two input databases: 1) a BLAST-formatted **nucleotide sequence database** and 2) a corresponding **taxonomy file**. The versions used in the WAAFLE publication, which are based on the ChocoPhlAn 2.0 pangenome catalog, are available for download here:
 
 * [chocophlan.v202210_202403.tar.gz](https://huttenhower.sph.harvard.edu/waafle_data/chocophlan.v202210_202403.waafledb.tar.gz) (67GB)
-* [chocophlan.v202210_2022403.taxonomy.tsv](https://huttenhower.sph.harvard.edu/waafle_data/chocophlan.v202210_202403.taxonomy.tsv) (<4 MB)
+* [chocophlan.v202210_202403.taxonomy.tsv](https://huttenhower.sph.harvard.edu/waafle_data/chocophlan.v202210_202403.taxonomy.tsv) (<4 MB)
 
 The BLAST database must be unpacked before it can be used. You can do this from the command line with:
 
