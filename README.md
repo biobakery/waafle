@@ -61,7 +61,7 @@ $ git clone https://github.com/biobakery/waafle.git
 
 ## Database requirements
 
-WAAFLE requires two input databases: 1) a BLAST-formatted **nucleotide sequence database** and 2) a corresponding **taxonomy file**. The versions used in the WAAFLE publication, which are based on the ChocoPhlAn SGB pangenome catalog, are available for download here:
+WAAFLE requires two input databases: 1) a BLAST-formatted **nucleotide sequence database** and 2) a corresponding **taxonomy file**. The versions based on the Oct22 ChocoPhlAn SGB pangenome catalog, are available for download here:
 
 * [chocophlan.v202210_202403.tar.gz](https://huttenhower.sph.harvard.edu/waafle_data/chocophlan.v202210_202403.waafledb.tar.gz) (67GB)
 * [chocophlan.v202210_202403.taxonomy.tsv](https://huttenhower.sph.harvard.edu/waafle_data/chocophlan.v202210_202403.taxonomy.tsv) (<4 MB)
